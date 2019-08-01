@@ -11,6 +11,11 @@ const path         = require('path');
 
 const cors = require('cors');
 
+const session       = require('express-session');
+const passport      = require('passport');
+
+require('./config/passport-stuff');
+
 mongoose
   .connect('mongodb://localhost/backend-project3', {useNewUrlParser: true})
   .then(x => {
@@ -50,17 +55,31 @@ app.use(favicon(path.join(__dirname, 'public', 'images', 'favicon.ico')));
 // default value for title local
 app.locals.title = 'Express - Generated with IronGenerator';
 
+app.use(session({
+  secret:"some secret goes here",
+  resave: true,
+  saveUninitialized: true
+}));
 
+//
+app.use(passport.initialize());
+app.use(passport.session());
 //
 app.use(cors({
   credentials: true,
   origin: ['http://localhost:3000']
 }));
 
-const index = require('./routes/index');
-app.use('/', index);
+// const index = require('./routes/index');
+// app.use('/', index);
+
+
 
 const userRoutes = require('./routes/userRoutes');
 app.use('/api/auth', userRoutes);
+
+const projectRoutes = require('./routes/projectRoutes');
+app.use('/api/projects', projectRoutes);
+
 
 module.exports = app;
