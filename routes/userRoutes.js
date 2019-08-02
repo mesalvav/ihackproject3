@@ -102,9 +102,6 @@ router.post('/logout', (req, res, next) => {
 });
 
 
-
-
-
 router.get('/getcurrentuser', (req, res, next) => {
     // req.isAuthenticated() is defined by passport
     if (req.user) {
